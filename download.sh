@@ -20,7 +20,3 @@ FASTTEXT_DIR=data/fasttext
 mkdir -p $FASTTEXT_DIR
 wget https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip -O $FASTTEXT_DIR/wiki-news-300d-1M.vec.zip
 unzip $FASTTEXT_DIR/wiki-news-300d-1M.vec.zip -d $FASTTEXT_DIR
-
-pip install spacy
-# Download Spacy language models
-python3 -m spacy download en

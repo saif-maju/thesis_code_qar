@@ -52,6 +52,7 @@ def process_file(config, data_type, word_counter, char_counter):
     for line in tqdm(rfp):
         # print(line)
         para = json.loads(line)
+        # print(para)
         context = para["context"].replace(
             "''", '" ').replace("``", '" ')
         # print(context)
@@ -290,8 +291,8 @@ def load_pickle(filename, message=None):
 def prepro(config):
     word_counter, char_counter = Counter(), Counter()
     
-    # process_file(config, "train", word_counter, char_counter)
-    # process_file(config, "dev", word_counter, char_counter)
+    process_file(config, "train", word_counter, char_counter)
+    process_file(config, "dev", word_counter, char_counter)
     process_file(config, "test", word_counter, char_counter)
 
     save_pickle(config.word_counter_file, word_counter, message="word counter")
@@ -327,11 +328,11 @@ def prepro(config):
     save(config.word2idx_file, word2idx_dict, message="word2idx")
     save(config.char2idx_file, char2idx_dict, message="char2idx")
 
-    # word_emb_mat = load(config.word_emb_file, message="word embedding")
-    # char_emb_mat = load(config.char_emb_file, message="char embedding")
+    word_emb_mat = load(config.word_emb_file, message="word embedding")
+    char_emb_mat = load(config.char_emb_file, message="char embedding")
 
-    # word2idx_dict = load(config.word2idx_file, message="word2idx")
-    # char2idx_dict = load(config.char2idx_file, message="char2idx")
+    word2idx_dict = load(config.word2idx_file, message="word2idx")
+    char2idx_dict = load(config.char2idx_file, message="char2idx")
 
     train_meta = build_features(config, "train", word2idx_dict, char2idx_dict)
     dev_meta = build_features(config, "dev", word2idx_dict, char2idx_dict)
