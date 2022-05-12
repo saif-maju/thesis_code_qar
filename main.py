@@ -126,8 +126,11 @@ def test(config):
         word_mat = np.array(json.load(fh), dtype=np.float32)
     with open(config.char_emb_file, "r") as fh:
         char_mat = np.array(json.load(fh), dtype=np.float32)
+    test_eval_file = {}
     with open(config.test_eval_file, "r") as fh:
-        eval_file = json.load(fh)
+        for line in tqdm(fh):
+          id = json.loads(line)["id"]
+          test_eval_file[str(id)] = line
     with open(config.test_meta, "r") as fh:
         meta = json.load(fh)
 
@@ -154,12 +157,12 @@ def test(config):
             qa_id, loss, yp1, yp2 = sess.run(
                 [model.qa_id, model.loss, model.yp1, model.yp2])
             answer_dict_, remapped_dict_ = convert_tokens(
-                eval_file, qa_id.tolist(), yp1.tolist(), yp2.tolist())
+                test_eval_file, qa_id.tolist(), yp1.tolist(), yp2.tolist())
             answer_dict.update(answer_dict_)
             remapped_dict.update(remapped_dict_)
             losses.append(loss)
         loss = np.mean(losses)
-        metrics = evaluate(eval_file, answer_dict)
+        metrics = evaluate(test_eval_file, answer_dict)
         with open(config.answer_file, "w") as fh:
             json.dump(remapped_dict, fh)
         print("Exact Match: {}, F1: {}".format(
